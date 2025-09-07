@@ -1,4 +1,14 @@
 <?php
+require_once __DIR__ . '/../app/Database.php';
+
+$config = [
+    'host' => 'localhost',
+    'port' => 3306,
+    'dbname' => 'vintage_vault',
+    'charset' => 'utf8mb4'
+];
+
+$db = new Database($config);
 
 // Always start sessions for user login
 session_start();
@@ -15,11 +25,13 @@ $routes = [
     '/home' => '../views/Pages/homePage.php',
     '/shop' => '../views/Pages/shopPage.php',
     '/gallery' => '../views/Pages/galleryPage.php',
-    '/login' => '../views/Pages/loginPage.php',
     '/contact' => '../views/Pages/contactPage.php',
     '/cart' => '../views/Pages/cartPage.php',
-    '/register' => '../views/Pages/registerPage.php',
-    '/logout' => 'logout',
+
+    // Authentication Routes
+    '/login' => [AuthController::class, 'login'],
+    '/register' => [AuthController::class, 'register'],
+    '/logout' => [AuthController::class, 'logout'],
     
     // Categories Routes
     '/category1' => '../views/components/categories/category1.php',
@@ -35,20 +47,21 @@ $routes = [
 
 // Check if the requested route exists
 if (array_key_exists($request_uri, $routes)) {
-    if ($routes[$request_uri] === 'register') {
-        $authController = new AuthController();
-        $authController->register();
-    } else if ($routes[$request_uri] === 'login') {
-        $authController = new AuthController();
-        $authController->login();
-    } else if ($routes[$request_uri] === 'logout') {
-        $authController = new AuthController();
-        $authController->logout();
+    $route = $routes[$request_uri];
+
+    if (is_array($route)) {
+        list($controller, $method) = $route;
+
+        // 1. This line creates our own "copy" of the controller object
+        $controllerInstance = new $controller($db); 
+        
+        // 2. This line calls the "recipe" (method) on our specific copy
+        $controllerInstance->$method(); 
     } else {
-        // Otherwise, just require the file
-        require $routes[$request_uri];
+        // This handles simple view routes
+        require $route;
     }
 } else {
-    // ... 404 error ...
-    echo "404 Not Found";
+    http_response_code(404);
+    echo "<h1>404 Page Not Found</h1>";
 }

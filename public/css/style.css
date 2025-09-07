@@ -11,7 +11,7 @@
     font-family: "Asimovian", sans-serif;
 }
 body{
-    background-color: #2c1e1e
+    background-color: #cb5c01
 }
 
 /* Import Google fonts */
@@ -308,7 +308,7 @@ body{
 /* ------------------------------------------------------ [LOGIN PAGE] ------------------------------------------------------*/
 .h1_login{
     text-align: center;
-    padding-top: 5%;
+    padding-top: 8%;
     color: white;
     font-size: 15pt;
 }

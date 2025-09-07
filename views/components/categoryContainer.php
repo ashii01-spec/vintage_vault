@@ -1,5 +1,6 @@
-<div class="container mx-auto px-1 p-60">
-    <h1 class="text-6xl font-bold text-center my-8 text-white">Categories</h1>
+<h1 class="text-6xl font-bold text-center my-20 text-white">Categories</h1>
+
+<div class="container mx-auto mb-32 px-0 p-10 my-10">
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
 
@@ -35,7 +36,7 @@
 
         <!-- Category 6 -->
         <a href="category6" class="bg-white rounded-lg shadow-md p-6 text-center transition transform hover:scale-105">
-            <img src="#" alt="Category 6" class="w-32 h-32 object-cover mx-auto mb-4">
+            <img src="#" alt="Category 6" class="w-60 h-60 object-cover mx-auto mb-4">
             <h2 class="text-xl font-bold">Category 6</h2>
         </a>
 

@@ -36,11 +36,14 @@
         <a href="cart" id="btn_cart">
             <img src="/Ashmi/vintage_vault/public/images/cart.png" alt="cart_img">
         </a>
+
+        <!-- Login/Signup/Logout Button -->
         <?php if (isset($_SESSION['user_id'])): ?>
-            <a href="logout.php"><button id="logout">Logout</button></a>
+            <span>Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</span>
+            <a href="/ashmi/vintage_vault/public/logout"><button id="logout">Logout</button></a>
         <?php else: ?>
-            <a href="login"><button id="login">Login</button></a>
-            <a href="register"><button id="signup">Sign Up</button></a>
+            <a href="/ashmi/vintage_vault/public/login"><button id="login">Login</button></a>
+            <a href="/ashmi/vintage_vault/public/register"><button id="signup">Sign Up</button></a>
         <?php endif; ?>
     </div>
 

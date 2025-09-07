@@ -1,32 +1,57 @@
 <!-- HTML Document -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="/ashmi/vintage_vault/public/css/style.css?v=<?php echo time(); ?>">
-    <title>Login</title>
-</head>
+
+<?php include __DIR__ . '/../components/header.php'; ?>
+
 <body>
 
-<!-- navbar -->
-<?php include __DIR__ . '/../components/navbar.php'; ?>
+    <!-- Go back Button -->
+     <br>
+    <a href="home" class="bg-gray-500 text-white px-4 py-3 rounded hover:bg-gray-600 m-4">
+        &larr;Back to Home
+    </a>
 
-<div class="h1_login">
-    <h1>LOGIN</h1>
-</div>
+    <!-- Success Message -->
+     <?php
+    if (isset($_SESSION['success_message'])) {
+        // If it does, display it in a nice green box
+        echo '<br>';
+        echo '<center><div style="color: black; background: green; font-size: 14pt;text-align: center; border: 1px solid green; padding: 10px; margin-bottom: 15px; width: 50%; box-shadow: 2px 2px 20px #000; border-radius: 10px ">';
+        echo $_SESSION['success_message'];
+        echo '</div></center>';
+    
+        // Now, "throw the note away" so it doesn't show again
+        unset($_SESSION['success_message']);
+    }
+    ?>
 
-<?php if (isset($error)): ?>
-    <p style="color: red;"><?php echo $error; ?></p>
-<?php endif; ?>
+    <!-- Error Message -->
+    <?php
+        // Check if an error "sticky note" exists
+        if (isset($_SESSION['error_message'])) {
+            // If it does, display it in a nice red box
+            echo '<center><div style="color: red;background: black; width: 50%; font-size: 14pt; text-align: center; border: 1px solid red; padding: 10px; margin-bottom: 15px; box-shadow: 2px 2px 20px #000; border-radius: 10px ">';
+            echo $_SESSION['error_message'];
+            echo '</div><center>';
+        
+            // "Throw the note away" so it doesn't show again
+            unset($_SESSION['error_message']);
+        }
+    ?>
 
-<main class="main-content">
+    <div class="h1_login">
+        <h1 class="text-center text-6xl font-bold">LOGIN</h1>
+    </div>
+
+   
+
+    <main class="main-content">
         <div class="login-container">
-            <form action="#" method="POST">
+            <form action="/ashmi/vintage_vault/public/login" method="POST">
                 <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" name="name" required>
+                    <label for="email">Email</label>
+                    <input type="text" id="email" name="email" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
@@ -40,8 +65,7 @@
         </div>
     </main>
 
-<!-- Footer -->
-<?php include __DIR__ . '/../components/footer.php'; ?>
+
     
 </body>
 </html>

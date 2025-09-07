@@ -1,59 +1,108 @@
 <?php
-
-require_once __DIR__ . '/../database.php';
-require_once __DIR__ . '/../models/user.php';
+// app/controllers/authController.php
 
 class AuthController {
+    private $db;
+
+    public function __construct($db) {
+        $this->db = $db;
+    }
+
+    public function showRegisterForm() {
+        require_once __DIR__ . '/../../views/Pages/registerPage.php';
+    }
+
+    // ----------------------------- [Register Function] ----------------------------- //
 
     public function register() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = $_POST['name'];
-            $email = $_POST['email'];
-            $password = $_POST['password'];
 
-            $user = new User();
-            $user->setName($name);
-            $user->setEmail($email);
-            $user->setPassword($password);
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->showRegisterForm();
+            return;
+        }
 
-            $user->save();
+        // --- NEW: Check for existing email FIRST ---
+        $email = $_POST['email'];
+        $user = $this->db->query("SELECT * FROM user WHERE email = :email", [':email' => $email])->fetch();
 
-            header('Location: /Ashmi/vintage_vault/public/login');
+        if ($user) {
+            // User already exists, set an error flash message
+            $_SESSION['error_message'] = "An account with this email already exists. Please login instead.";
+
+            // Redirect back to the registration form
+            header('Location: /ashmi/vintage_vault/public/register');
             exit();
         }
 
-        require_once __DIR__ . '/../../views/Pages/Register.php';
-    }
+        // --- If email is NOT found, proceed with registration ---
+        $name = $_POST['name'];
+        $address = $_POST['address'];
+        $mobile = $_POST['mobile'];
+        $password = $_POST['password'];
+        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
+        $this->db->query(
+            "INSERT INTO user(name, email, address, mobile, password) VALUES(:name, :email, :address, :mobile, :password)",
+            [
+                ':name' => $name,
+                ':email' => $email,
+                ':address' => $address,
+                ':mobile' => $mobile,
+                ':password' => $hashed_password
+            ]
+        );
+
+        // Set the success message
+        $_SESSION['success_message'] = "Registration successful! Please log in.";
+        header('Location: /ashmi/vintage_vault/public/login');
+        exit();
+    }
+    
+
+    // ----------------------------- [Login Function] ----------------------------- //
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // --- Process the login form ---
             $email = $_POST['email'];
             $password = $_POST['password'];
 
-            $user = new User();
-            $loggedInUser = $user->findByEmail($email);
+            // Find the user by email
+            $user = $this->db->query("SELECT * FROM user WHERE email = :email", [':email' => $email])->fetch();
 
-            if ($loggedInUser && password_verify($password, $loggedInUser['password'])) {
-                session_start();
-                $_SESSION['user_id'] = $loggedInUser['id'];
-                $_SESSION['user_name'] = $loggedInUser['name'];
+            // Check if user exists and if the password is correct
+            if ($user && password_verify($password, $user['password'])) {
+                // Password is correct! Login successful.
+                // Store user info in the session to remember them
+                $_SESSION['user_id'] = $user['user_id'];
+                $_SESSION['user_name'] = $user['name'];
 
-                header('Location: /Ashmi/vintage_vault/public/');
+                // Redirect to the homepage
+                header('Location: /ashmi/vintage_vault/public/home');
                 exit();
             } else {
-                $error = "Invalid email or password";
-                require_once __DIR__ . '/../../views/Pages/login.php';
+                // Incorrect email or password
+                $_SESSION['error_message'] = "Invalid email or password.";
+                header('Location: /ashmi/vintage_vault/public/login');
+                exit();
             }
-        }
 
-        require_once __DIR__ . '/../../views/Pages/login.php';
+        } else {
+            // --- Show the login form ---
+            require_once __DIR__ . '/../../views/Pages/loginPage.php';
+        }    
     }
 
+
+    // ----------------------------- [Logout Function] ----------------------------- //
     public function logout() {
-        session_start();
+        // Clear all session variables
         session_unset();
+        // Destroy the session
         session_destroy();
-        header('Location: /Ashmi/vintage_vault/public/');
+        // Redirect to the homepage
+        header('Location: /ashmi/vintage_vault/public/home');
         exit();
     }
 }
+
+?>
