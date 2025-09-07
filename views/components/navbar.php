@@ -7,7 +7,7 @@
             <img src="/Ashmi/vintage_vault/public/images/logo.png" alt="Vintage Vault Logo">
         </a>
         <a href="home">
-            <h1>VINTAGE VAULT</h1>
+            <h1 class="text-white text-3xl">VINTAGE VAULT</h1>
         </a>
     </div>
     

@@ -12,10 +12,10 @@
 
     <div class="home_section1">
         <video autoplay loop muted id="bgvid">
-            <source src="/ashmi/vintage_vault/public/videos/body_bg_vid.mp4" type="video/mp4">
+            <source src="/ashmi/vintage_vault/public/Videos/body_bg_vid.mp4" type="video/mp4">
         </video>
-        <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <h1 class="text-white text-6xl font-bold">WELCOME TO THE VINTAGE VAULT</h1>
+        <div class="Justify-center">
+            <h1 class="text-white text-6xl font-bold text-center">WELCOME TO THE VINTAGE VAULT</h1>
         </div>
     </div>
 
