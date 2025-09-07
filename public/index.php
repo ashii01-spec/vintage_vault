@@ -1,32 +1,47 @@
 <?php
 require_once __DIR__ . '/../app/Database.php';
 
+// Database configuration
 $config = [
     'host' => 'localhost',
     'port' => 3306,
     'dbname' => 'vintage_vault',
     'charset' => 'utf8mb4'
 ];
-
 $db = new Database($config);
 
-// Always start sessions for user login
+
+// Control access to specific pages based on user authentication
+function auth_guard() {
+    // Check if the user ID is NOT set in the session
+    if (!isset($_SESSION['user_id'])) {
+        // If they are not logged in, set an error message
+        $_SESSION['error_message'] = "You must be logged in to view that page.";
+        
+        // Redirect them to the login page
+        header('Location: /ashmi/vintage_vault/public/login');
+        exit();
+    }
+}
+
 session_start();
 
-// Include the Database class
+
 require_once __DIR__ . '/../app/controllers/authController.php';
-
-// Simple Router Logic
 $request_uri = '/' . ($_GET['url'] ?? '');
-
-// Define your routes and which view file they load
 $routes = [
     // Public Routes
     '/home' => '../views/Pages/homePage.php',
-    '/shop' => '../views/Pages/shopPage.php',
+    '/shop' => function() {
+        auth_guard();
+        require '../views/Pages/shopPage.php';
+    },
     '/gallery' => '../views/Pages/galleryPage.php',
     '/contact' => '../views/Pages/contactPage.php',
-    '/cart' => '../views/Pages/cartPage.php',
+    '/cart' => function() {
+        auth_guard();
+        require '../views/Pages/cartPage.php';
+    },
 
     // Authentication Routes
     '/login' => [AuthController::class, 'login'],
@@ -50,15 +65,17 @@ if (array_key_exists($request_uri, $routes)) {
     $route = $routes[$request_uri];
 
     if (is_array($route)) {
+        // Case 1: It's a controller route (an array)
         list($controller, $method) = $route;
+        $controllerInstance = new $controller($db);
+        $controllerInstance->$method();
 
-        // 1. This line creates our own "copy" of the controller object
-        $controllerInstance = new $controller($db); 
-        
-        // 2. This line calls the "recipe" (method) on our specific copy
-        $controllerInstance->$method(); 
+    } elseif (is_callable($route)) {
+        // Case 2: It's a guard function/closure
+        $route();
+
     } else {
-        // This handles simple view routes
+        // Case 3: It's a simple view route (a string)
         require $route;
     }
 } else {
