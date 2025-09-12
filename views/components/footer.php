@@ -16,7 +16,7 @@
             <h1>Menu</h1>
             <ul>
                 <li><a href="home">Home</a></li>
-                <li><a href="shop.php">Shop</a></li>
+                <li><a href="shop">Shop</a></li>
                 <li><a href="gallery">Gallery</a></li>
                 <li><a href="contact">Contact us</a></li>
             </ul>

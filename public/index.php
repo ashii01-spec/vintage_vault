@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/../app/Database.php';
+require_once __DIR__ . '/../app/models/User.php';
+require_once __DIR__ . '/../app/controllers/authController.php';
 
 // Database configuration
 $config = [
@@ -8,6 +10,7 @@ $config = [
     'dbname' => 'vintage_vault',
     'charset' => 'utf8mb4'
 ];
+
 $db = new Database($config);
 
 
@@ -26,9 +29,9 @@ function auth_guard() {
 
 session_start();
 
-
-require_once __DIR__ . '/../app/controllers/authController.php';
 $request_uri = '/' . ($_GET['url'] ?? '');
+
+// ---------------------------------- [Define routes] ---------------------------------- //
 $routes = [
     // Public Routes
     '/home' => '../views/Pages/homePage.php',

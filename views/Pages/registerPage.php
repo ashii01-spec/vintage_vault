@@ -32,7 +32,7 @@
 
     <main class="main-content">
         <div class="register-container">
-            <form action="#" method="POST">
+            <form action="/ashmi/vintage_vault/public/register" method="POST">
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" id="name" name="name" required>
@@ -49,7 +49,7 @@
                     <label for="mobile">Mobile</label>
                     <div class="phone-input">
                         <span>+94</span>
-                        <input type="tel" id="phone-mobile" name="mobile" required>
+                        <input type="tel" id="mobile" name="mobile" required>
                     </div>
                 </div>
                 <div class="form-group">

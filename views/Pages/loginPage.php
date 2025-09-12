@@ -17,7 +17,7 @@
     if (isset($_SESSION['success_message'])) {
         // If it does, display it in a nice green box
         echo '<br>';
-        echo '<center><div style="color: black; background: green; font-size: 14pt;text-align: center; border: 1px solid green; padding: 10px; margin-bottom: 15px; width: 50%; box-shadow: 2px 2px 20px #000; border-radius: 10px ">';
+        echo '<center><div style="color: orange; background: green; font-size: 14pt;text-align: center; border: 1px solid green; padding: 10px; margin-bottom: 15px; width: 50%; box-shadow: 2px 2px 20px #000; border-radius: 10px ">';
         echo $_SESSION['success_message'];
         echo '</div></center>';
     
